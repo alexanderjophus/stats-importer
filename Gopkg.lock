@@ -39,6 +39,18 @@
   version = "v1.2.0"
 
 [[projects]]
+  name = "github.com/gorilla/context"
+  packages = ["."]
+  revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
+  version = "v1.1.1"
+
+[[projects]]
+  name = "github.com/gorilla/mux"
+  packages = ["."]
+  revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
+  version = "v1.6.2"
+
+[[projects]]
   branch = "master"
   name = "github.com/jbenet/go-context"
   packages = ["io"]
@@ -294,6 +306,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "840e905324636ba4e28eed4a25dfcd36c2404191f5c99689f694f55aa8e8b8a3"
+  inputs-digest = "3ea39ad760b0972699b9737d0af294ca1ad03e7a7673a143f21071bc060c5b5b"
   solver-name = "gps-cdcl"
   solver-version = 1
