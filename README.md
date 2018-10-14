@@ -23,7 +23,8 @@ Run;
 - `export ADDRESS=$(minikube ip):30650` (if using minikube), address is needed for pachyderm
 - `pachctl port-forward &` to use pachyderm
 - `make create-repo` to create the repo we'll be using
-- `make run` this will build and start the service on port 8080
+- `make dd` allows us to reuse minikubes built in docker deamon, meaning we don't have to build and push to an external registry
+- `make` this will build and start the service on port 8080
 
 Once the API is up and running call the service with a post with a body similar to;
 
