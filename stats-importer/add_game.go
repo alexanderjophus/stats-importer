@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type requestBody struct {
@@ -58,8 +59,10 @@ func (c *pachdClient) addFileToRepo(r io.Reader, path string) (err error) {
 		err = c.Client.FinishCommit(repoName, commit.ID)
 	}()
 
+	path = strings.Replace(path, "?", "/", -1)
+	path = strings.Replace(path, "=", "_", -1)
 	// Put a file containing the respective project name.
-	if _, err := c.Client.PutFileOverwrite(repoName, commit.ID, path, r, 0); err != nil {
+	if _, err := c.Client.PutFileOverwrite(repoName, commit.ID, path+".raw", r, 0); err != nil {
 		return err
 	}
 
