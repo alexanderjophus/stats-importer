@@ -7,30 +7,41 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/pachyderm/pachyderm/src/client"
 )
 
-type requestBody struct {
-	Link string `json:"link"`
+// games handles /games endpoint
+func (s *Server) games(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		if err := s.addGame(w, r); err != nil {
+			// remove once middleware is in place
+			log.Println(err)
+		}
+	}
 }
 
-func addLink(w http.ResponseWriter, r *http.Request) {
+func (s *Server) addGame(w http.ResponseWriter, r *http.Request) error {
+	type requestBody struct {
+		Link string `json:"link"`
+	}
 	var t requestBody
 	err := json.NewDecoder(r.Body).Decode(&t)
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		return err
 	}
-	err = linkReader(t.Link)
+	err = s.linkReader(t.Link)
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return err
 	}
+	return nil
 }
 
-func linkReader(link string) error {
-	r, err := netClient.Get(baseString + link)
+func (s *Server) linkReader(link string) error {
+	r, err := s.c.Get(baseString + link)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -41,7 +52,7 @@ func linkReader(link string) error {
 		return fmt.Errorf("%s", r.Status)
 	}
 
-	err = pC.addFileToRepo(r.Body, link)
+	err = s.store.storeFile(r.Body, link)
 	if err != nil {
 		return err
 	}
@@ -49,7 +60,11 @@ func linkReader(link string) error {
 	return nil
 }
 
-func (c *pachdClient) addFileToRepo(r io.Reader, path string) (err error) {
+type pachdRepo struct {
+	Client *client.APIClient
+}
+
+func (c pachdRepo) storeFile(r io.Reader, path string) (err error) {
 	// Start a commit in our "livefeed" data repo on the "master" branch.
 	commit, err := c.Client.StartCommit(repoName, "master")
 	if err != nil {
