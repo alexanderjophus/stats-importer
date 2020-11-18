@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stats-importer
+spec:
+  selector:
+    matchLabels:
+      run: stats-importer
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: stats-importer
+    spec:
+      containers:
+      - name: stats-importer
+        image: stats-importer
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stats-importer
+  labels:
+    run: stats-importer
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    run: stats-importer
