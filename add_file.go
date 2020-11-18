@@ -11,18 +11,18 @@ import (
 	"github.com/pachyderm/pachyderm/src/client"
 )
 
-// games handles /games endpoint
-func (s *Server) games(w http.ResponseWriter, r *http.Request) {
+// addFile handles /addFile endpoint
+func (s *Server) addFile(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
-		if err := s.addGame(w, r); err != nil {
+		if err := s.postFile(w, r); err != nil {
 			// remove once middleware is in place
 			log.Println(err)
 		}
 	}
 }
 
-func (s *Server) addGame(w http.ResponseWriter, r *http.Request) error {
+func (s *Server) postFile(w http.ResponseWriter, r *http.Request) error {
 	type requestBody struct {
 		Link string `json:"link"`
 	}

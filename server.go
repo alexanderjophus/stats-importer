@@ -27,7 +27,7 @@ func NewServer(pr pachdRepo) Server {
 			Timeout: time.Second * 10,
 		},
 	}
-	s.router.HandleFunc("/games", s.games)
+	s.router.HandleFunc("/", s.addFile)
 	return s
 }
 
